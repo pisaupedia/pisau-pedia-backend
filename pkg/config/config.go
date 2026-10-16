@@ -1,7 +1,9 @@
 package config
 
 import (
+	"errors"
 	"fmt"
+	"io/fs"
 	"log"
 	"strings"
 
@@ -54,7 +56,9 @@ func Load() (*Config, error) {
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	if err := v.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+		// SetConfigFile reports a missing file as an fs error, not
+		// ConfigFileNotFoundError (that one only comes from search paths).
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok && !errors.Is(err, fs.ErrNotExist) {
 			return nil, fmt.Errorf("read config: %w", err)
 		}
 		log.Println("no .env file found, relying on process environment variables")

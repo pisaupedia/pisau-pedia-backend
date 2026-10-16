@@ -88,6 +88,7 @@ type ProductListItemResponse struct {
 	Maker          string  `json:"maker,omitempty"`
 	Badge          string  `json:"badge,omitempty"`
 	Category       string  `json:"category,omitempty"`
+	Image          string  `json:"image,omitempty"`
 	Stock          uint    `json:"stock"`
 	RatingAvg      float64 `json:"rating"`
 	ReviewCount    uint    `json:"review_count"`
@@ -95,10 +96,10 @@ type ProductListItemResponse struct {
 
 type ProductDetailResponse struct {
 	ProductListItemResponse
-	Description string   `json:"description,omitempty"`
-	Images      []string `json:"images"`
+	Description string               `json:"description,omitempty"`
+	Images      []string             `json:"images"`
 	Specs       []ProductSpecRequest `json:"specs"`
-	Highlights  []string `json:"highlights"`
+	Highlights  []string             `json:"highlights"`
 }
 
 func toProductListItem(p *entity.Product) ProductListItemResponse {
@@ -121,6 +122,11 @@ func toProductListItem(p *entity.Product) ProductListItemResponse {
 	}
 	if p.CategoryName != nil {
 		resp.Category = *p.CategoryName
+	}
+	if p.PrimaryImage != nil {
+		resp.Image = *p.PrimaryImage
+	} else if len(p.Images) > 0 {
+		resp.Image = p.Images[0].URL
 	}
 	return resp
 }

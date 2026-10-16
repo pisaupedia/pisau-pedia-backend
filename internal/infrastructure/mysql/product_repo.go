@@ -69,7 +69,9 @@ func (r *productRepository) FindAll(ctx context.Context, filter repository.Produ
 
 	offset := (filter.Page - 1) * filter.PerPage
 	listQuery := fmt.Sprintf(`
-		SELECT p.*, c.name AS category_name
+		SELECT p.*, c.name AS category_name,
+			(SELECT pi.url FROM product_images pi WHERE pi.product_id = p.id
+			 ORDER BY pi.sort_order LIMIT 1) AS primary_image
 		FROM products p
 		LEFT JOIN categories c ON c.id = p.category_id
 		WHERE %s

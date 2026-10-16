@@ -22,5 +22,7 @@ func Connect(dsn string) (*sqlx.DB, error) {
 		return nil, fmt.Errorf("ping mysql: %w", err)
 	}
 
-	return db, nil
+	// Unsafe: repositories use SELECT *, so tolerate columns the entities
+	// don't map yet (e.g. a schema restored from a newer dump).
+	return db.Unsafe(), nil
 }

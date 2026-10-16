@@ -11,9 +11,11 @@ const (
 )
 
 type Product struct {
-	ID             string    `db:"id"`
-	CategoryID     *string   `db:"category_id"`
-	CategoryName   *string   `db:"category_name"`
+	ID           string  `db:"id"`
+	CategoryID   *string `db:"category_id"`
+	CategoryName *string `db:"category_name"`
+	// First image by sort_order — filled by the listing query for cards.
+	PrimaryImage   *string   `db:"primary_image"`
 	Name           string    `db:"name"`
 	Slug           string    `db:"slug"`
 	Description    *string   `db:"description"`
@@ -37,11 +39,11 @@ type Product struct {
 }
 
 type ProductImage struct {
-	ID        string `db:"id"`
-	ProductID string `db:"product_id"`
-	URL       string `db:"url"`
+	ID        string  `db:"id"`
+	ProductID string  `db:"product_id"`
+	URL       string  `db:"url"`
 	AltText   *string `db:"alt_text"`
-	SortOrder uint   `db:"sort_order"`
+	SortOrder uint    `db:"sort_order"`
 }
 
 type ProductSpec struct {
